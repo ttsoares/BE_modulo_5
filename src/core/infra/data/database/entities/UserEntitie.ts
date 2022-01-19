@@ -1,9 +1,9 @@
 import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
-import { Message } from "./MessageEntitie";
+import { MessageEntity } from "./MessageEntitie";
 
 @Entity({ name: "users" })
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
     uid?: number;
 
@@ -13,8 +13,8 @@ export class User extends BaseEntity {
   @Column()
     password: string;
 
-  @OneToMany('Message', (message: Message) => message.user, {onDelete:"CASCADE"})
-    message!: Message[];
+  @OneToMany('Message', (message: MessageEntity) => message.user, {onDelete:"CASCADE"})
+    message!: MessageEntity[];
 
   constructor( name: string, password: string ) {
     super();

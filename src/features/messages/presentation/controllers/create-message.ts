@@ -13,7 +13,7 @@ export class CreateMessageController implements Controller{
 			const user_id:number = Number(req.params.userid);
 			const { description, details } = req.body;
 
-			const message = await repository.create(description.slice(0,44), details.slice(0,149), user_id)
+			const message = await repository.create(description, details, user_id)
 
 			const temp:object = { details: details, description: description, user_id: user_id };
 			return res.status(200).json(temp);

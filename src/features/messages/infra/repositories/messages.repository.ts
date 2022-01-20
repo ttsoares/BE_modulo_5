@@ -13,9 +13,10 @@ interface MessageParams {
 export class MessageRepository {
   async create(
     data: MessageParams,
-    user_id: number
+    user_id: number //////////////////////////???
   ): Promise<Message | undefined> {
     const messageEntity = MessageEntity.create({
+      /// uid ????
       description: data.description,
       details: data.details,
       user_id: user_id,

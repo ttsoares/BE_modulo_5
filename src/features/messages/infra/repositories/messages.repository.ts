@@ -23,11 +23,6 @@ export class MessageRepository {
   ///// Cria uma nova mensagem no DB
   async create( data: CreateMessageParams, ): Promise<Message | undefined> {
 
-    // const verifyUserByUid = await UserEntity.findOne({
-    //   where: { uid: data.user_id }});
-    //
-    // if (!verifyUserByUid) return undefined;
-
     const newMessage = MessageEntity.create({
       description: data.description,
       details: data.details,

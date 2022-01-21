@@ -8,17 +8,13 @@ export class DeleteUserController implements Controller{
 		try {
 
 			const user_id = Number(req.params.userid)
-
 			const repository = new UserRepository();
-
 			const findUser = await repository.getOne(user_id)
 
 		if (!findUser) return res.status(404).send("Usuário não encontrado");
 
-		const temp:object={name: findUser.name, password: findUser.password}
-
     const remove = await repository.delete(findUser.uid)
-		return res.status(200).json(temp);
+		return res.status(200).json(findUser);
 
 	} catch (err:any) {
 			return serverError(res, err);

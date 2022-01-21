@@ -22,11 +22,6 @@ export class UserRepository {
       password: data.password,
     });
 
-    // const verificaNome = await UserEntity.findOne({
-    //   where: { name: data.name }});
-    //
-    // if (verificaNome) throw new Error("Nome de usuário já existe");
-
     await userEntity.save();
 
     return this.mapperFromEntityToModel(userEntity);

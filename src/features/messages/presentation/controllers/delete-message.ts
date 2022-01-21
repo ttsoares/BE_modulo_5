@@ -12,9 +12,9 @@ export class DeleteMessageController implements Controller{
 
 			const repository = new MessageRepository();
 
-			const deleteado = await repository.delete(message_id)
+			const removedMessage = await repository.delete(message_id)
 
-			return res.status(200).json(deleteado);
+			return res.status(200).json(removedMessage);
 
 } catch (err:any) {
 			return serverError(res, err);

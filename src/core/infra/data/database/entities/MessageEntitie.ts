@@ -5,7 +5,7 @@ import { UserEntity } from "./UserEntitie"
 @Entity({ name: "messages" })
 export class MessageEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-    uid?: number;
+    uid!: number;
 
   @Column()
     description: string;

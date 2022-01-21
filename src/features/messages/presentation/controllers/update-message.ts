@@ -9,24 +9,17 @@ export class UpdateMessageController implements Controller{
 		try {
 			const repository = new MessageRepository();
 
-/*
-public async update(req: Request, res: Response) {
-		const connection = new Database().getConnection();
-		const user_id:number = Number(req.params.userid);
-		const message_id:number = Number(req.params.messageid);
-		const { description, details }: { description: string; details: string } = req.body;
-		const message: Message | undefined = await Message.findOne({
-			where: [ {uid: message_id, user_id: user_id} ]});
-		message!.description = description;
-		message!.details = details;
-		await Message.save(message!);
-		const temp:object = { details: details, description: description };
-		return res.status(200).json(temp);
-	}
-*/
+			const user_id:number = Number(req.params.userid);
+			const message_id:number = Number(req.params.messageid);
+			const { description, details } = req.body;
 
+			const message = await repository.update({
+				description: description, details: details, uid:message_id
+			})
 
-		} catch (err) {
+			return res.status(200).json(message);
+
+		} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

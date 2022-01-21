@@ -9,13 +9,17 @@ export class CreateUserController implements Controller{
 		try {
 
 		const repository = new UserRepository();
-
     const { name, password } = req.body;
-    const userExists: User | undefined = await User.findOne({where: [{name: name}]})
-    if (userExists)  return res.status(400).send("Usuário já existe !")
 
+    const userExists = await repository.getOne(name);
+    if (userExists)  return res.status(400).send("Usuário já existe !");
 
-		} catch (err) {
+		const newUser = await repository.signUp({
+			name: name,
+			password: password
+		})
+
+	} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

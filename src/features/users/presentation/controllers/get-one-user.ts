@@ -11,13 +11,13 @@ export class GetOneUserController implements Controller{
 		const repository = new UserRepository();
 
     const user_id:number = Number(req.params.userid)
-    const findUser  = await repository.findOne({where: [ {uid: user_id}]});
-    
+    const findUser  = await repository.getOne(user_id);
+
     const temp:object = { name: findUser!.name, password: findUser!.password };
     return res.status(200).json(temp);
 
 
-		} catch (err) {
+	} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

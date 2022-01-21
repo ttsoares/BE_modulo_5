@@ -8,20 +8,14 @@ export class GetOneMessageController implements Controller{
 	async handle(req: Request, res: Response): Promise<any> {
 		try {
 			const repository = new MessageRepository();
+			const user_id:number = Number(req.params.userid);
+			const message_id:number = Number(req.params.messageid);
 
+			const OneMessage = await repository.getByUid(message_id)
 
-/*
-public async index(req: Request, res: Response) {
-	const connection = new Database().getConnection();
-	const user_id:number = Number(req.params.userid);
-	const message_id:number = Number(req.params.messageid);
-	const message: Message | undefined = await Message.findOne({
-		where: [ {uid: message_id, user_id: user_id} ]});
-	const temp:object = { details: message!.details, description: message!.description };
-	return res.status(200).json(temp);
-}*/
+			return res.status(200).json(OneMessage);
 
-		} catch (err) {
+} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

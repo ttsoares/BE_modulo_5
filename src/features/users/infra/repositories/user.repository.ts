@@ -1,32 +1,41 @@
-import { UserEntity } from "../../../../core/infra/data/database/entities/UserEntitie";
+import { MessageEntity } from
+"../../../../core/infra/data/database/entities/MessageEntitie";
+import { UserEntity } from
+"../../../../core/infra/data/database/entities/UserEntitie";
+
 import { User } from "../../domain/models/user";
 
 interface UserParams {
-  uid?: string;
+  uid?: number;
   name: string;
   password: string;
 }
 
 export class UserRepository {
+//***************************
+
+  /////  Cria um novo usuário no DB
   async signUp(data: UserParams): Promise<User> {
+
     const userEntity = UserEntity.create({
       name: data.name,
       password: data.password,
     });
 
     const verificaNome = await UserEntity.findOne({
-      where: { name: data.name },
-    });
-    if (verificaNome) throw new Error("ALREADY_EXIST_USER_ERROR");
+      where: { name: data.name }});
+
+    if (verificaNome) throw new Error("Nome de usuário já existe");
 
     await userEntity.save();
 
     return this.mapperFromEntityToModel(userEntity);
   }
 
+  /////  Verifica autenticação do usuário
   async signIn(data: UserParams): Promise<User | undefined> {
     const userEntity = await UserEntity.findOne({
-      where: { name: data.name },
+      where: { name: data.name }
     });
 
     if (!userEntity) return undefined;
@@ -34,53 +43,55 @@ export class UserRepository {
     return this.mapperFromEntityToModel(userEntity);
   }
 
-  async getAll(): Promise<User[]> {
-    const userEntities = await UserEntity.find({
-      relations: ["messages"],
+  ///// Busca um usuário para a edição
+  async getOne(uid: number): Promise<User> {
+
+    const userEntity = await UserEntity.findOne({
+      where: { uid:uid }
     });
+
+    return this.mapperFromEntityToModel(userEntity!);
+  }
+
+  ///// Traz a lista de usuários
+  async getAll(): Promise<User[]> {
+    const userEntities = await UserEntity.find();
 
     return userEntities.map((userEntity) =>
       this.mapperFromEntityToModel(userEntity)
     );
   }
 
-  // async getByUid(uid: string): Promise<User | undefined> {
-  //   const userEntity = await UserEntity.findOne(uid);
+  ///// Remove um usuário
+  async delete(uid: number): Promise<User | undefined> {
 
-  //   if (!userEntity) return undefined;
+    const userEntity = await UserEntity.findOne(uid);
+    if (!userEntity) return undefined;
+    const apagado = await userEntity.remove()
 
-  //   return this.mapperFromEntityToModel(userEntity);
-  // }
+    return this.mapperFromEntityToModel(userEntity!);
+  }
 
-  // async editUser(data: UserParams): Promise<User | undefined> {
-  //   const userEntity = await UserEntity.findOne(data.uid);
+  /////  Atualiza um usuário no DB
+  async update(data: UserParams): Promise<User | undefined> {
 
-  //   if (!userEntity) return undefined;
+    const updtUser: UserEntity | undefined = await UserEntity.findOne({
+			where: [ {uid: data.uid}]})
 
-  //   const userUpdated = UserEntity.create({
-  //     nome: data.nome,
-  //     senha: data.senha,
-  //     uid: data.uid,
-  //   });
+    if (!updtUser) return undefined;
 
-  //   await userUpdated.save();
+    updtUser.name = data.name;
+    updtUser.password = data.password;
 
-  //   return this.mapperFromEntityToModel(userUpdated);
-  // }
+    await updtUser.save();
 
-  // async destroy(uid: string): Promise<User | undefined> {
-  //   const userEntity = await UserEntity.findOne(uid);
+    return this.mapperFromEntityToModel(updtUser);
+  }
 
-  //   if (!userEntity) return undefined;
-
-  //   await UserEntity.remove(userEntity);
-
-  //   return this.mapperFromEntityToModel(userEntity);
-  // }
 
   private mapperFromEntityToModel(entity: UserEntity): User {
     return {
-      uid: entity.uid,
+      uid: Number(entity.uid),
       name: entity.name,
       password: entity.password,
       messages: entity.message,

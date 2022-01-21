@@ -4,7 +4,7 @@ import { serverError, sucess,
 } from "../../../../core/presentation/helpers/helpers";
 import { UserRepository } from "../../infra/repositories/user.repository"
 
-export class GetOneUserController implements Controller{
+export class UpdateUserController implements Controller{
 	async handle(req: Request, res: Response): Promise<any> {
 		try {
 
@@ -16,15 +16,16 @@ export class GetOneUserController implements Controller{
 		// empty password is not allowed
 		if ( password.replace(/\s+/g,'') === '') return res.status(400).send("Senha vazia !");
 
-		const findUser = await repository.findOne({where: [ {uid: user_id}]});
+		const findUser = await repository.getOne(user_id);
 		findUser!.name = name;
 		findUser!.password = password;
-		await repository.save(findUser!);
+
+		await repository.update(findUser!);
 
 		const temp:object = { name: name, password: password }
 		return res.status(200).json(temp);
 
-		} catch (err) {
+	} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

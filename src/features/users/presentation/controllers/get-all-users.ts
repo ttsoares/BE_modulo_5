@@ -10,12 +10,11 @@ export class GetAllUsersController implements Controller{
 
 		const repository = new UserRepository();
 
-    const allUsers = await repository.find()
+		const allUsers = await repository.getAll()
 
-    return res.status(200).render('users', {data:allUsers});  // To EJS
+		return res.status(200).render('users', {data:allUsers});
 
-
-		} catch (err) {
+	} catch (err:any) {
 			return serverError(res, err);
 		}
 	}

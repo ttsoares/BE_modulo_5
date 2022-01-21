@@ -22,8 +22,7 @@ export class UpdateUserController implements Controller{
 
 		await repository.update(findUser!);
 
-		const temp:object = { name: name, password: password }
-		return res.status(200).json(temp);
+		return res.status(200).json(findUser);
 
 	} catch (err:any) {
 			return serverError(res, err);

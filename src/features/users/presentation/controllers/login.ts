@@ -12,10 +12,14 @@ export class LoginUserController implements Controller{
 
       const { name, password } = req.body;
 
-      const userExists = await repository.getOne(name);
+      const userExists = await repository.signIn(name);
+
+      if (!userExists) return res.status(404).send("Usuário não encontrado");
 
       if (userExists.name === name && userExists.password === password)
         return res.status(200).send(`${userExists.uid}`);
+
+      else return res.status(400).send("Senha errada");
 
     } catch (err:any) {
   			return serverError(res, err);

@@ -1,4 +1,3 @@
-
 import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 import { MessageEntity } from "./MessageEntitie";

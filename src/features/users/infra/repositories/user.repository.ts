@@ -22,10 +22,10 @@ export class UserRepository {
       password: data.password,
     });
 
-    const verificaNome = await UserEntity.findOne({
-      where: { name: data.name }});
-
-    if (verificaNome) throw new Error("Nome de usuário já existe");
+    // const verificaNome = await UserEntity.findOne({
+    //   where: { name: data.name }});
+    //
+    // if (verificaNome) throw new Error("Nome de usuário já existe");
 
     await userEntity.save();
 
@@ -33,17 +33,19 @@ export class UserRepository {
   }
 
   /////  Verifica autenticação do usuário
-  async signIn(data: UserParams): Promise<User | undefined> {
+  async signIn(name: string): Promise<User | undefined> {
+
     const userEntity = await UserEntity.findOne({
-      where: { name: data.name }
+      where: { name: name }
     });
+
 
     if (!userEntity) return undefined;
 
     return this.mapperFromEntityToModel(userEntity);
   }
 
-  ///// Busca um usuário para a edição
+  ///// Busca um usuário peo 'uid'
   async getOne(uid: number): Promise<User> {
 
     const userEntity = await UserEntity.findOne({

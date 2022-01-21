@@ -1,3 +1,4 @@
+
 import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 import { MessageEntity } from "./MessageEntitie";
@@ -13,7 +14,7 @@ export class UserEntity extends BaseEntity {
   @Column()
     password: string;
 
-  @OneToMany('Message', (message: MessageEntity) => message.user, {onDelete:"CASCADE"})
+  @OneToMany(() => MessageEntity, message => message.user, {onDelete:"CASCADE"})
     message!: MessageEntity[];
 
   constructor( name: string, password: string ) {

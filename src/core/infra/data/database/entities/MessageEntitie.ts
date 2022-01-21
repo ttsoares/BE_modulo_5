@@ -1,3 +1,4 @@
+
 import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, ManyToOne, PrimaryColumn, JoinColumn } from "typeorm";
 
 import { UserEntity } from "./UserEntitie"
@@ -16,7 +17,7 @@ export class MessageEntity extends BaseEntity {
   @Column()
     user_id: number;
 
-  @ManyToOne('User', (user: UserEntity) => user.message)
+  @ManyToOne(() => UserEntity, user => user.message)
   @JoinColumn({ name: "user_id", referencedColumnName: "uid" })
   user!: UserEntity;
 

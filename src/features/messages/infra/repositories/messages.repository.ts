@@ -28,55 +28,56 @@ export class MessageRepository {
     //
     // if (!verifyUserByUid) return undefined;
 
-    const messageEntity = MessageEntity.create({
+    const newMessage = MessageEntity.create({
       description: data.description,
       details: data.details,
       user_id: data.user_id,
     });
 
-    await messageEntity.save();
+    await newMessage.save();
 
-    return this.mapperFromEntityToModel(messageEntity);
-  }
-
-  /////  Busca uma mensagem pelo 'uid'
-  async getByUid(uid: number): Promise<Message | undefined> {
-    const messageEntity = await MessageEntity.findOne(uid, {
-      select: ["description", "details", "uid"]});
-
-    if (!messageEntity) return undefined;
-    return this.mapperFromEntityToModel(messageEntity);
-  }
-
-  /////   Apaga uma mensagem pelo 'uid'
-  async delete(uid: number): Promise<Message | undefined> {
-    const messageEntity = await MessageEntity.findOne(uid);
-    if (!messageEntity) return undefined;
-    const apagado = await messageEntity.remove()
-    return this.mapperFromEntityToModel(messageEntity);
+    return this.mapperFromEntityToModel(newMessage);
   }
 
   /////  Busca um array com todas as mensagens de um usuário
   async getAll(user_id: number): Promise<Message[]> {
-    const messages = await MessageEntity.find({where: {user_id} });
+    const allMessages = await MessageEntity.find({where: {user_id} });
 
-    return messages.map(elm => this.mapperFromEntityToModel(elm))
+    return allMessages.map(elm => this.mapperFromEntityToModel(elm))
+  }
+
+  /////   Apaga uma mensagem pelo 'uid'
+  async delete(uid: number): Promise<Message | undefined> {
+    const oneMessage = await MessageEntity.findOne(uid);
+
+    if (!oneMessage) return undefined;
+    const removed = await oneMessage.remove()
+    return this.mapperFromEntityToModel(oneMessage);
+  }
+
+  /////  Busca uma mensagem pelo 'uid'
+  async getByUid(uid: number): Promise<Message | undefined> {
+    const oneMessage = await MessageEntity.findOne(uid, {
+      select: ["description", "details", "uid"]});
+
+    if (!oneMessage) return undefined;
+    return this.mapperFromEntityToModel(oneMessage);
   }
 
   /////  Atualiza o resgistro de uma mensagem buscada pelo getByUid
   async update( data: UpdateMessageParams, ): Promise<Message | undefined> {
 
-    const message: MessageEntity | undefined = await MessageEntity.findOne({
+    const oneMessage: MessageEntity | undefined = await MessageEntity.findOne({
 			where: [ {uid: data.uid} ]});
 
-    if (!message) return undefined;
+    if (!oneMessage) return undefined;
 
-    message.description = data.description;
-    message.details = data.details
+    oneMessage.description = data.description;
+    oneMessage.details = data.details
 
-    await message.save();
+    await oneMessage.save();
 
-    return this.mapperFromEntityToModel(message);
+    return this.mapperFromEntityToModel(oneMessage);
   }
 
   /////  função que transforma de 'entity' para 'model'
